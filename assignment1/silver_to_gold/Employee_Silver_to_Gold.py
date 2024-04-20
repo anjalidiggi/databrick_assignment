@@ -1,7 +1,11 @@
+#%run "/Users/anjali.gupta@diggibyte.com/databricksassignment/assignment1/source_to_bronze/utils"
+
+#%run "/Users/anjali.gupta@diggibyte.com/databricksassignment/assignment1/bronze_to_silver/employee_bronze_to_silver"
+
 from pyspark.sql.functions import desc,count,avg
 
 
-employee_df = spark.read.format("delta").load('dbfs:/FileStore/assignments/question1/silver/employee_info/dim_employees')
+employee_df = spark.read.format("delta").load('dbfs:/FileStore/silver/employee_info/dim_employees')
 display(employee_df)
 
 
@@ -25,9 +29,5 @@ avg_age_employee = employee_with_date_df.groupBy('department').agg(avg("age").al
 display(avg_age_employee)
 
 
-employee_with_date_df.write.format("parquet").mode("overwrite").option("replaceWhere", "load_date = '2024-04-16'").save("/FileStore/assignments/gold/employee/table_name")
-
-
-
-employee_with_date_df.write.format("parquet").mode("overwrite").option("replaceWhere", "load_date = '2024-04-16'").save("/FileStore/assignments/gold/employee/table_name")
+employee_with_date_df.write.format("parquet").mode("overwrite").option("replaceWhere", "load_date >= '2024-04-16'").save("/FileStore/gold/employee/table_name")
 display(employee_with_date_df)

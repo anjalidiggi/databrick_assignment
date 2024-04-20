@@ -1,28 +1,27 @@
-dbutils.widgets.text("data_type", "", "data_type")
-dbutils.widgets.text("table_name", "", "table_name")
-dbutils.widgets.text("database_name", "", "database_name")
-data_type = dbutils.widgets.get("data_type")
-data_type = dbutils.widgets.get("table_name")
-data_type = dbutils.widgets.get("database_name")
 
-%run / Users / anjali.gupta @ diggibyte.com / Databricks_assignment / Source_to_Bronze / Util
+#%run "/Users/anjali.gupta@diggibyte.com/databricksassignment/assignment1/source_to_bronze/utils"
 
+dbutils.widgets.text("Employee-Q1", "", "Employee")
+dbutils.widgets.text("Department-Q1", "", "Department")
+dbutils.widgets.text("Country-Q1", "", "Country")
+emp = dbutils.widgets.get("Employee-Q1")
+dep = dbutils.widgets.get("Department-Q1")
+coun = dbutils.widgets.get("Country-Q1")
 
-source_path = f"dbfs:/FileStore/assignments/assignment1/resources/{data_type}.csv"
-bronze_path = f"dbfs:/FileStore/assignments/assignment1/source_to_bronze1/{data_type1}.csv"
-reading_csv_files = read_csv_data(source_path)
-reading_csv_files.display()
+emp_source_path = f"dbfs:/FileStore/resource/{emp}.csv"
+emp_bronze_path = f"dbfs:/FileStore/source_to_bronze/{emp}.csv"
+emp_reading_csv_file = read_csv_data(emp_source_path)
+emp_reading_csv_file.display()
+write_csv_file(emp_reading_csv_file, emp_bronze_path)
 
+dep_source_path = f"dbfs:/FileStore/resource/{dep}.csv"
+dep_bronze_path = f"dbfs:/FileStore/source_to_bronze/{dep}.csv"
+dep_reading_csv_file = read_csv_data(dep_source_path)
+dep_reading_csv_file.display()
+write_csv_file(dep_reading_csv_file, dep_bronze_path)
 
-write_csv_file(reading_csv_files, bronze_path)
-
-
-def overwrite_silver_path(database_name, table_name, df, silver_path):
-    df.mode("overwrite").option("path", silver_path).saveAsTable(f'{database_name}.{table_name}')
-
-
-
-write_delta_table(employee_df, "Employee_info", "dim_employee", "EmployeeID", "/silver/Employee_info/dim_employee")
-
-
-display(dbutils.fs.ls('dbfs:/FileStore/assignments/assignment1/source_to_bronze'))
+coun_source_path = f"dbfs:/FileStore/resource/{coun}.csv"
+coun_bronze_path = f"dbfs:/FileStore/source_to_bronze/{coun}.csv"
+coun_reading_csv_file = read_csv_data(coun_source_path)
+coun_reading_csv_file.display()
+write_csv_file(coun_reading_csv_file, coun_bronze_path)

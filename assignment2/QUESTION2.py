@@ -12,7 +12,7 @@ while True:
         break
     data.extend(json_data['data'])
     page += 1
-  
+
 #Read the data frame with a custom schema
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, IntegerType, StringType
@@ -26,6 +26,9 @@ schema = StructType([
     StructField('last_name', StringType(), True),
     StructField('avatar', StringType(), True)
 ])
+
+df = spark.createDataFrame(data, schema)
+
 #Flatten the dataframe
 from pyspark.sql.functions import col
 
@@ -36,6 +39,7 @@ df_flat = df.select(
     col('last_name'),
     col('avatar')
 )
+
 #Derive a new column from email as site_address with values(reqres.in)
 from pyspark.sql.functions import split, col
 
@@ -43,6 +47,7 @@ df_final = df_flat.withColumn(
     'site_address',
     split(col('email'), '@')[1]
 )
+
 #Add load_date with the current date
 from pyspark.sql.functions import current_date
 
@@ -50,10 +55,10 @@ df_final = df_final.withColumn(
     'load_date',
     current_date()
 )
+
 #Write the data frame to location in DBFS as /db_name /table_name with Db_name as site_info and table_name as person_info with delta format and overwrite mode.
 
-dbfs_path = '/db_name/table_name'
-df_final.write.format('delta').mode('overwrite').save(dbfs_path)
+df_final.write.format('delta').mode('overwrite').save('dbfs:/FileStore/assignment/question2/site_info/person_info')
 
+testing_df = spark.read.format('delta').load('dbfs:/FileStore/assignment/question2/site_info/person_info')
 
-df = spark.createDataFrame(data, schema)

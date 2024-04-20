@@ -63,3 +63,4 @@ def read_with_custom_schema_format(data, schema):
 def add_current_date(df):
     df = df.withColumn("load_date", current_date())
     return df
+

@@ -1,3 +1,5 @@
+#%run "/Users/anjali.gupta@diggibyte.com/databricksassignment/assignment1/source_to_bronze/utils"
+
 from pyspark.sql.types import StructField,StructType,StringType,IntegerType
 
 
@@ -24,9 +26,9 @@ department_custom_schema = StructType([
 ])
 
 
-employee_csv_path = "dbfs:/FileStore/assignments/assignment1/source_to_bronze/employee_df.csv"
-country_csv_path = "dbfs:/FileStore/assignments/assignment1/source_to_bronze/country_df.csv"
-department_csv_path = "dbfs:/FileStore/assignments/assignment1/source_to_bronze/department_df.csv"
+employee_csv_path = "dbfs:/FileStore/source_to_bronze/Employee_Q1.csv"
+country_csv_path = "dbfs:/FileStore/source_to_bronze/Country_Q1.csv"
+department_csv_path = "dbfs:/FileStore/source_to_bronze/Department_Q1.csv"
 
 
 
@@ -72,10 +74,11 @@ country_with_date_df = add_current_date(country_snake_case_df)
 display(country_with_date_df)
 
 
-
-
+spark.sql('create database employee_info')
 spark.sql('use employee_info')
 
+employee_df.write.option('path', 'dbfs:/FileStore/silver/employee_info/dim_employees').saveAsTable('dim_employees')
 
 
-employee_df.write.option('path', 'dbfs:/FileStore/assignments/question1/silver/employee_info/dim_employees').saveAsTable('dim_employees')
+
+
